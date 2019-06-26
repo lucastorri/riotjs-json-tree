@@ -54,13 +54,17 @@
       .tree-leaf-boolean {
         color: purple;
       }
+      .tree-leaf-null {
+        color: darkslategray;
+        font-weight: bold;
+      }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
     <script type="riot/tag" src="tree.tag.html"></script>
     <script>
       riot.mount("tree", {
-        obj: {a:1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false},
+        obj: {a:1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false, g: null},
         showDepth: 2
       })
     </script>

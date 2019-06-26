@@ -25,14 +25,18 @@
     ]
   </span>
 
-  <span if={ isOther } class="tree-leaf tree-leaf-{typeof obj}">{ JSON.stringify(obj) }</span>
+  <span if={ isOther } class="tree-leaf tree-leaf-{ type(obj) }">{ JSON.stringify(obj) }</span>
 
   <script>
+    this.type = what => {
+      return what === null ? "null" : typeof what;
+    };
+
     this.isRoot = this.parent === null;
 
     this.obj = opts.obj;
     this.isArray = Array.isArray(this.obj);
-    this.isObject = typeof this.obj === 'object' && !this.isArray;
+    this.isObject = this.type(this.obj) === 'object' && !this.isArray;
     this.isOther = !(this.isArray || this.isObject);
 
     this.showAll = opts.showAll || false;
