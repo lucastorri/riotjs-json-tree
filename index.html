@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Riot.js JSON Tree</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+
+    <div>
+      <tree />
+    </div>
+
+    <style>
+      body {
+        font-size: 16px;
+        font-family: monospace;
+      }
+      a {
+        color: #5755d9;
+        cursor: pointer;
+      }
+      tree {
+        margin-right: -10px;
+      }
+      .tree-controls {
+        margin-bottom: 10px;
+      }
+      .tree-node > ul {
+        padding-left: 1em;
+        line-height: 1.5em;
+        list-style-type: none;
+        margin: 0;
+      }
+      .tree-node > ul > li {
+        margin: 0;
+      }
+      .tree-node > ul > li:after {
+        content: ","
+      }
+      .tree-node > ul > li:last-child:after {
+        content: ""
+      }
+      .tree-key {
+        font-weight: bold;
+      }
+      .tree-key:after {
+        content: ":";
+      }
+      .tree-leaf-number {
+        color: blue;
+      }
+      .tree-leaf-string {
+        color: green;
+      }
+      .tree-leaf-boolean {
+        color: purple;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
+    <script type="riot/tag" src="tree.tag.html"></script>
+    <script>
+      riot.mount("tree", {
+        obj: {a:1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false},
+        showDepth: 2
+      })
+    </script>
+
+  </body>
+</html>

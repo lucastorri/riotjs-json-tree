@@ -1,0 +1,55 @@
+<tree>
+
+  <div class="tree-controls" if={ isRoot }>
+    <a onclick={ toggleAll }>toggle</a>
+  </div>
+
+  <span if={ isObject } class="tree-node tree-node-object">
+    &#123; <a onclick={ toggle }>{ show ? '-' : '+' }</a>
+    <ul if={ show || showAll }>
+      <li each={ element in Object.entries(obj) } >
+        <span class="tree-key">{ element[0] }</span>
+        <tree obj={ element[1] } show-depth={ opts.showDepth - 1 } show-all={ showAll } />
+      </li>
+    </ul>
+    &#125;
+  </span>
+
+  <span if={ isArray }  class="tree-node tree-node-array">
+    [ <a onclick={ toggle }>{ show ? '-' : '+' }</a>
+    <ul if={ show || showAll }>
+      <li each={ element, index in obj }>
+        <tree obj={ element } show-depth={ opts.showDepth - 1 } show-all={ showAll } />
+      </li>
+    </ul>
+    ]
+  </span>
+
+  <span if={ isOther } class="tree-leaf tree-leaf-{typeof obj}">{ JSON.stringify(obj) }</span>
+
+  <script>
+    this.isRoot = this.parent === null;
+
+    this.obj = opts.obj;
+    this.isArray = Array.isArray(this.obj);
+    this.isObject = typeof this.obj === 'object' && !this.isArray;
+    this.isOther = !(this.isArray || this.isObject);
+
+    this.showAll = opts.showAll || false;
+    this.show = this.showAll || opts.showDepth > 0 || opts.show || false;
+
+    this.toggle = () => {
+      this.update({
+        show: !this.show,
+        showAll: false
+      });
+    };
+
+    this.toggleAll = () => {
+      this.update({
+        show: !this.show,
+        showAll: !this.show
+      });
+    };
+  </script>
+</tree>
