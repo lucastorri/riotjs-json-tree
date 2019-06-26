@@ -26,21 +26,21 @@
     ]
   </span>
 
-  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type(obj) }" data-path={ path }>{ JSON.stringify(obj) }</span>
+  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }" data-path={ path }>{ JSON.stringify(obj) }</span>
 
   <script>
-    this.type = obj => {
-      if (Array.isArray(obj)) return "array";
-      else if (obj === null) return "null";
-      else return typeof obj;
-    };
-
     this.isRoot = this.parent === null;
     this.path = this.isRoot ? '' : this.parent.path + opts.path;
 
     this.obj = opts.obj;
-    this.isArray = this.type(this.obj) === "array";
-    this.isObject = this.type(this.obj) === "object";
+    this.type = (() => {
+      if (Array.isArray(this.obj)) return "array";
+      else if (this.obj === null) return "null";
+      else return typeof this.obj;
+    })();
+
+    this.isArray = this.type === "array";
+    this.isObject = this.type === "object";
     this.isLeaf = !(this.isArray || this.isObject);
 
     this.showAll = opts.showAll || false;
