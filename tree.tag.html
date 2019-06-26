@@ -2,14 +2,15 @@
 
   <div class="tree-controls" if={ isRoot }>
     <a onclick={ toggleAll }>toggle</a>
+    <a onclick={ resetAll }>reset</a>
   </div>
-
+  
   <span if={ isObject } class="tree-node tree-node-object">
     &#123; <a onclick={ toggle }>{ show ? '-' : '+' }</a>
-    <ul if={ show || showAll }>
+    <ul if={ show }>
       <li each={ element in Object.entries(obj) } >
         <span class="tree-key">{ element[0] }</span>
-        <tree obj={ element[1] } show-depth={ opts.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
+        <tree parent={ this } obj={ element[1] } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
       </li>
     </ul>
     &#125;
@@ -18,9 +19,9 @@
   <span if={ isArray } class="tree-node tree-node-array">
     [
     <a onclick={ toggle }>{ show ? '-' : '+' }</a>
-    <ul if={ show || showAll }>
-      <li each={ element, index in obj }>
-        <tree obj={ element } show-depth={ opts.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
+    <ul if={ show }>
+      <li each={ (element, index) in obj }>
+        <tree parent={ this } obj={ element } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
       </li>
     </ul>
     ]
@@ -29,36 +30,50 @@
   <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }" data-path={ path }>{ JSON.stringify(obj) }</span>
 
   <script>
-    this.isRoot = this.parent === null;
-    this.path = this.isRoot ? '' : this.parent.path + opts.path;
+    export default {
+      onMounted() {
+        this.isRoot = !this.props.parent;
+        this.path = this.isRoot ? '' : this.props.parent.path + this.props.path;
 
-    this.obj = opts.obj;
-    this.type = (() => {
-      if (Array.isArray(this.obj)) return "array";
-      else if (this.obj === null) return "null";
-      else return typeof this.obj;
-    })();
+        this.obj = this.props.obj;
+        this.type = (() => {
+          if (Array.isArray(this.obj)) return "array";
+          else if (this.obj === null) return "null";
+          else return typeof this.obj;
+        })();
 
-    this.isArray = this.type === "array";
-    this.isObject = this.type === "object";
-    this.isLeaf = !(this.isArray || this.isObject);
+        this.isArray = this.type === "array";
+        this.isObject = this.type === "object";
+        this.isLeaf = !(this.isArray || this.isObject);
 
-    this.showAll = opts.showAll || false;
-    this.show = opts.showDepth > 0 || opts.show || false;
+        this.resetAll();
+      },
 
-    this.toggle = () => {
-      this.update({
-        show: !this.show,
-        showAll: false
-      });
-    };
+      onUpdated() {
+        this.showAll = this.props.showAll || false;
+        this.show = this.show || this.showAll;
+      },
+      
+      toggle() {
+        this.show = !this.show;
+        this.showAll = false;
+        this.update();
+      },
 
-    this.toggleAll = () => {
-      this.update({
-        show: !this.show,
-        showAll: !this.show
-      });
-    };
+      toggleAll() {
+        this.showAll = !this.show;
+        this.show = this.showAll;
+        this.update()
+      },
+
+      resetAll() {
+        this.show = false;
+        this.update();
+        this.showAll = this.props.showAll || false;
+        this.show = this.props.showDepth > 0 || this.showAll;
+        this.update();
+      }
+    }
   </script>
 
 </tree>

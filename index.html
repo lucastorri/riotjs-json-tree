@@ -18,11 +18,11 @@
         color: #5755d9;
         cursor: pointer;
       }
-      tree {
-        margin-right: -10px;
-      }
       .tree-controls {
         margin-bottom: 10px;
+      }
+      .tree-controls > a {
+        margin: 0 10 0 10;
       }
       .tree-node > ul {
         padding-left: 1em;
@@ -43,7 +43,7 @@
         font-weight: bold;
       }
       .tree-key:after {
-        content: ":";
+        content: ": ";
       }
       .tree-leaf-number {
         color: blue;
@@ -60,13 +60,17 @@
       }
     </style>
 
-    <script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
-    <script type="riot/tag" src="tree.tag.html"></script>
+    <script type="riot" src="tree.tag.html"></script>
+    <script src="https://unpkg.com/riot@4/riot+compiler.min.js"></script>
     <script>
-      riot.mount("tree", {
-        obj: {a:1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false, g: null},
-        showDepth: 2
-      })
+      (async function main() {
+        await riot.compile()
+
+        riot.mount("tree", {
+          obj: {a:1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false, g: null},
+          showDepth: 2,
+        });
+      }());
     </script>
 
   </body>
