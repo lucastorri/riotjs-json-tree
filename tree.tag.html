@@ -28,19 +28,21 @@
   <span if={ isOther } class="tree-leaf tree-leaf-{ type(obj) }">{ JSON.stringify(obj) }</span>
 
   <script>
-    this.type = what => {
-      return what === null ? "null" : typeof what;
+    this.type = obj => {
+      if (Array.isArray(obj)) return "array";
+      else if (obj === null) return "null";
+      else return typeof obj;
     };
 
     this.isRoot = this.parent === null;
 
     this.obj = opts.obj;
-    this.isArray = Array.isArray(this.obj);
-    this.isObject = this.type(this.obj) === 'object' && !this.isArray;
+    this.isArray = this.type(this.obj) === "array";
+    this.isObject = this.type(this.obj) === "object";
     this.isOther = !(this.isArray || this.isObject);
 
     this.showAll = opts.showAll || false;
-    this.show = this.showAll || opts.showDepth > 0 || opts.show || false;
+    this.show = opts.showDepth > 0 || opts.show || false;
 
     this.toggle = () => {
       this.update({
