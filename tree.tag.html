@@ -9,23 +9,24 @@
     <ul if={ show || showAll }>
       <li each={ element in Object.entries(obj) } >
         <span class="tree-key">{ element[0] }</span>
-        <tree obj={ element[1] } show-depth={ opts.showDepth - 1 } show-all={ showAll } />
+        <tree obj={ element[1] } show-depth={ opts.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
       </li>
     </ul>
     &#125;
   </span>
 
-  <span if={ isArray }  class="tree-node tree-node-array">
-    [ <a onclick={ toggle }>{ show ? '-' : '+' }</a>
+  <span if={ isArray } class="tree-node tree-node-array">
+    [
+    <a onclick={ toggle }>{ show ? '-' : '+' }</a>
     <ul if={ show || showAll }>
       <li each={ element, index in obj }>
-        <tree obj={ element } show-depth={ opts.showDepth - 1 } show-all={ showAll } />
+        <tree obj={ element } show-depth={ opts.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
       </li>
     </ul>
     ]
   </span>
 
-  <span if={ isOther } class="tree-leaf tree-leaf-{ type(obj) }">{ JSON.stringify(obj) }</span>
+  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type(obj) }" data-path={ path }>{ JSON.stringify(obj) }</span>
 
   <script>
     this.type = obj => {
@@ -35,11 +36,12 @@
     };
 
     this.isRoot = this.parent === null;
+    this.path = this.isRoot ? '' : this.parent.path + opts.path;
 
     this.obj = opts.obj;
     this.isArray = this.type(this.obj) === "array";
     this.isObject = this.type(this.obj) === "object";
-    this.isOther = !(this.isArray || this.isObject);
+    this.isLeaf = !(this.isArray || this.isObject);
 
     this.showAll = opts.showAll || false;
     this.show = opts.showDepth > 0 || opts.show || false;
@@ -58,4 +60,5 @@
       });
     };
   </script>
+
 </tree>
