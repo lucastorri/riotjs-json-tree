@@ -131,10 +131,6 @@
         this.show = this.props.showDepth > 0 || this.showAll;
         this.update();
       },
-     
-      root() {
-        return this.isRoot ? this : this.parent.root();
-      },
 
       renderKey(key) {
         return this.customizer.key(`${this.path}.${key}`, key, this.obj);
