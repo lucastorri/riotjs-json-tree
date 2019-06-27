@@ -14,7 +14,7 @@
         <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
       </li>
     </ul>
-    &#125;
+    &#125;<!-- force that a whitespace isn't added -->
   </span>
 
   <span if={ isArray } class="tree-node tree-node-array">
