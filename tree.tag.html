@@ -1,3 +1,4 @@
+
 <tree>
 
   <div class="tree-controls" if={ isRoot }>
@@ -9,7 +10,7 @@
     &#123; <a onclick={ toggle }>{ show ? '-' : '+' }</a>
     <ul if={ show }>
       <li each={ element in Object.entries(obj) } >
-        <span class="tree-key">{ renderKey(element[0]) }</span>
+        <span class="tree-key"><raw html={ renderKey(element[0]) } /></span>
         <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
       </li>
     </ul>
@@ -27,9 +28,25 @@
     ]
   </span>
 
-  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }">{ renderLeaf() }</span>
+  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }"><raw html={ renderLeaf() } /></span>
 
   <script>
+    riot.register('raw', {
+      name: 'raw',
+      template: '',
+      exports: {
+        updateHTML() {
+          this.root.innerHTML = this.props.html;
+        },
+        onMounted() {
+          this.updateHTML();
+        },
+        onUpdated() {
+          this.updateHTML();
+        },
+      },
+    });
+
     const defaultCustomizer = {
       key: (path, key, obj) => key,
       leaf: (path, obj) => JSON.stringify(obj),

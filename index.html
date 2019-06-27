@@ -67,10 +67,11 @@
         await riot.compile()
 
         riot.mount("tree", {
-          obj: {a:1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false, g: null},
+          obj: {a: 1.7, b: {c: [1, 2, {d: 3}, 4]}, e: "hi there!", f: false, g: null},
           showDepth: 2,
           customizer: {
-            key: (path, key, obj) => path === '.b.c' ? key + '!' : undefined
+            key: (path, key, obj) => path === '.b.c' ? `<span style="background-color: #c5def3;">${key}!</span>` : undefined,
+            leaf: (path, value, type) => type === 'boolean' ? `<span style="background-color: #fff4fc;">${value}</span>` : undefined,
           }
         });
       }());
