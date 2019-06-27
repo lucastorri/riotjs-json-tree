@@ -2,6 +2,8 @@
 <tree>
 
   <div class="tree-controls" if={ isRoot }>
+    <a onclick={ expandAll }>expand</a>
+    <a onclick={ collapseAll }>colapse</a>
     <a onclick={ toggleAll }>toggle</a>
     <a onclick={ resetAll }>reset</a>
   </div>
@@ -103,10 +105,23 @@
         this.update();
       },
 
+      expandAll() {
+        this.collapseAll();
+        this.showAll = true;
+        this.show = true;
+        this.update();
+      },
+
+      collapseAll() {
+        this.showAll = false;
+        this.show = false;
+        this.update();
+      },
+
       toggleAll() {
         this.showAll = !this.show;
         this.show = this.showAll;
-        this.update()
+        this.update();
       },
 
       resetAll() {
