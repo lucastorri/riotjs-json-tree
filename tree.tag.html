@@ -9,8 +9,8 @@
     &#123; <a onclick={ toggle }>{ show ? '-' : '+' }</a>
     <ul if={ show }>
       <li each={ element in Object.entries(obj) } >
-        <span class="tree-key">{ element[0] }</span>
-        <tree parent={ this } obj={ element[1] } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
+        <span class="tree-key">{ renderKey(element[0]) }</span>
+        <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
       </li>
     </ul>
     &#125;
@@ -21,21 +21,27 @@
     <a onclick={ toggle }>{ show ? '-' : '+' }</a>
     <ul if={ show }>
       <li each={ (element, index) in obj }>
-        <tree parent={ this } obj={ element } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
+        <tree parent={ this } obj={ element } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
       </li>
     </ul>
     ]
   </span>
 
-  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }" data-path={ path }>{ JSON.stringify(obj) }</span>
+  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }">{ renderLeaf() }</span>
 
   <script>
+    const defaultCustomizer = {
+      key: (path, key, obj) => key,
+      leaf: (path, obj) => JSON.stringify(obj),
+    };
+
     export default {
-      onMounted() {
+
+      onBeforeMount() {
         this.isRoot = !this.props.parent;
-        this.path = this.isRoot ? '' : this.props.parent.path + this.props.path;
 
         this.obj = this.props.obj;
+        this.path = this.isRoot ? '' : this.props.parent.path + this.props.path;
         this.type = (() => {
           if (Array.isArray(this.obj)) return "array";
           else if (this.obj === null) return "null";
@@ -46,6 +52,19 @@
         this.isObject = this.type === "object";
         this.isLeaf = !(this.isArray || this.isObject);
 
+        this.customizer = (() => {
+          const base = Object.assign({}, defaultCustomizer, this.props.customizer);
+          return Object.fromEntries(Object.entries(base).map(([property, f]) => {
+            const nf = (...args) => {
+              const result = f(...args);
+              return result === undefined ? defaultCustomizer[property](...args) : result;
+            };
+            return [property, nf];
+          }));
+        })();
+      },
+
+      onMounted() {
         this.resetAll();
       },
 
@@ -72,7 +91,20 @@
         this.showAll = this.props.showAll || false;
         this.show = this.props.showDepth > 0 || this.showAll;
         this.update();
-      }
+      },
+     
+      root() {
+        return this.isRoot ? this : this.parent.root();
+      },
+
+      renderKey(key) {
+        return this.customizer.key(`${this.path}.${key}`, key, this.obj);
+      },
+
+      renderLeaf() {
+        return this.customizer.leaf(this.path, this.obj, this.type);
+      },
+
     }
   </script>
 
