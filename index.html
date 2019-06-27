@@ -71,7 +71,7 @@
           showDepth: 2,
           customizer: {
             key: (path, key, obj) => path === '.b.c' ? `<span style="background-color: #c5def3;">${key}!</span>` : undefined,
-            leaf: (path, value, type) => {
+            value: (path, value, type) => {
               if (type === "boolean") {
                 const link = document.createElement('a');
                 link.innerText = value;

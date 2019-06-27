@@ -28,7 +28,7 @@
     ]
   </span>
 
-  <span if={ isLeaf } class="tree-leaf tree-leaf-{ type }"><raw html={ renderLeaf() } /></span>
+  <span if={ isValue } class="tree-leaf tree-leaf-{ type }"><raw html={ renderValue() } /></span>
 
   <script>
     riot.register('raw', {
@@ -56,7 +56,7 @@
 
     const defaultCustomizer = {
       key: (path, key, obj) => key,
-      leaf: (path, obj) => JSON.stringify(obj),
+      value: (path, obj) => JSON.stringify(obj),
     };
 
     export default {
@@ -74,7 +74,7 @@
 
         this.isArray = this.type === "array";
         this.isObject = this.type === "object";
-        this.isLeaf = !(this.isArray || this.isObject);
+        this.isValue = !(this.isArray || this.isObject);
 
         this.customizer = (() => {
           const base = Object.assign({}, defaultCustomizer, this.props.customizer);
@@ -125,8 +125,8 @@
         return this.customizer.key(`${this.path}.${key}`, key, this.obj);
       },
 
-      renderLeaf() {
-        return this.customizer.leaf(this.path, this.obj, this.type);
+      renderValue() {
+        return this.customizer.value(this.path, this.obj, this.type);
       },
 
     }
