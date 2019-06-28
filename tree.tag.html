@@ -14,7 +14,7 @@
       <ul class="tree-node-list tree-node-object-list">
         <li each={ element in Object.entries(obj) } class="tree-node-item tree-node-object-item">
           <span class="tree-key"><raw html={ renderKey(element[0]) } /></span>
-          <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
+          <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
         </li>
       </ul>
     </span>
@@ -26,7 +26,7 @@
     <span if={ show }>
       <ul class="tree-node-list tree-node-array-list">
         <li each={ (element, index) in obj } class="tree-node-item tree-node-array-item">
-          <tree parent={ this } obj={ element } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
+          <tree parent={ this } obj={ element } customizer={ customizer } show-depth={ showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
         </li>
       </ul>
     </span>
@@ -103,6 +103,7 @@
       },
       
       toggle() {
+        this.showDepth = 0;
         this.show = !this.show;
         this.showAll = false;
         this.update();
@@ -110,28 +111,29 @@
 
       expandAll() {
         this.collapseAll();
+        this.showDepth = 0;
         this.showAll = true;
         this.show = true;
         this.update();
       },
 
       collapseAll() {
+        this.showDepth = 0;
         this.showAll = false;
         this.show = false;
         this.update();
       },
 
       toggleAll() {
-        this.showAll = !this.show;
-        this.show = this.showAll;
-        this.update();
+        this.show ? this.collapseAll() : this.expandAll();
       },
 
       resetAll() {
         this.show = false;
         this.update();
+        this.showDepth = this.props.showDepth
         this.showAll = this.props.showAll || false;
-        this.show = this.props.showDepth > 0 || this.showAll;
+        this.show = this.showDepth > 0 || this.showAll;
         this.update();
       },
 
