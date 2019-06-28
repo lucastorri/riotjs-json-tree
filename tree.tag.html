@@ -33,7 +33,7 @@
     ]<!-- force that a whitespace isn't added -->
   </span>
 
-  <span if={ isValue } class="tree-value tree-value-{ type }"><raw html={ renderValue() } /></span>
+  <span if={ isValue } class="tree-value tree-value-{ type }" data-path={ path }><raw html={ renderValue() } /></span>
 
   <script>
     riot.register('raw', {
@@ -70,7 +70,7 @@
         this.isRoot = !this.props.parent;
 
         this.obj = this.props.obj;
-        this.path = this.isRoot ? '' : this.props.parent.path + this.props.path;
+        this.path = this.isRoot ? this.props.path || '' : this.props.parent.path + this.props.path;
         this.type = (() => {
           if (Array.isArray(this.obj)) return "array";
           else if (this.obj === null) return "null";
