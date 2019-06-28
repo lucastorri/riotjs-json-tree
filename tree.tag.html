@@ -10,24 +10,27 @@
   
   <span if={ isObject } class="tree-node tree-node-object">
     &#123; <a onclick={ toggle }>{ show ? '-' : '+' }</a>
-    <ul if={ show }>
-      <li each={ element in Object.entries(obj) } >
-        <span class="tree-key"><raw html={ renderKey(element[0]) } /></span>
-        <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
-      </li>
-    </ul>
+    <span if={ show }>
+      <ul class="tree-node-list tree-node-object-list">
+        <li each={ element in Object.entries(obj) } class="tree-node-item tree-node-object-item">
+          <span class="tree-key"><raw html={ renderKey(element[0]) } /></span>
+          <tree parent={ this } obj={ element[1] } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '.' + element[0] } />
+        </li>
+      </ul>
+    </span>
     &#125;<!-- force that a whitespace isn't added -->
   </span>
 
   <span if={ isArray } class="tree-node tree-node-array">
-    [
-    <a onclick={ toggle }>{ show ? '-' : '+' }</a>
-    <ul if={ show }>
-      <li each={ (element, index) in obj }>
-        <tree parent={ this } obj={ element } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
-      </li>
-    </ul>
-    ]
+    [ <a onclick={ toggle }>{ show ? '-' : '+' }</a>
+    <span if={ show }>
+      <ul class="tree-node-list tree-node-array-list">
+        <li each={ (element, index) in obj } class="tree-node-item tree-node-array-item">
+          <tree parent={ this } obj={ element } customizer={ customizer } show-depth={ props.showDepth - 1 } show-all={ showAll } path={ '[' + index + ']' } />
+        </li>
+      </ul>
+    </span>
+    ]<!-- force that a whitespace isn't added -->
   </span>
 
   <span if={ isValue } class="tree-leaf tree-leaf-{ type }"><raw html={ renderValue() } /></span>
