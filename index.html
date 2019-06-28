@@ -45,16 +45,16 @@
       .tree-key:after {
         content: ": ";
       }
-      .tree-leaf-number {
+      .tree-value-number {
         color: blue;
       }
-      .tree-leaf-string {
+      .tree-value-string {
         color: green;
       }
-      .tree-leaf-boolean {
+      .tree-value-boolean {
         color: purple;
       }
-      .tree-leaf-null {
+      .tree-value-null {
         color: darkslategray;
         font-weight: bold;
       }
@@ -64,7 +64,7 @@
     <script src="https://unpkg.com/riot@4/riot+compiler.min.js"></script>
     <script>
       (async function main() {
-        await riot.compile()
+        await riot.compile();
 
         riot.mount("tree", {
           obj: {a: 1.7, b: {c: [1, 2, {d: 3, z: true}, 4]}, e: "hi there!", f: false, g: null},
