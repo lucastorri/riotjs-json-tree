@@ -81,7 +81,7 @@
         this.isObject = this.type === "object";
         this.isValue = !(this.isArray || this.isObject);
 
-        this.customizer = (() => {
+        this.customizer = !this.isRoot ? this.props.customizer : (() => {
           const base = Object.assign({}, defaultCustomizer, this.props.customizer);
           return Object.fromEntries(Object.entries(base).map(([property, f]) => {
             const nf = (...args) => {
