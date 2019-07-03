@@ -9,7 +9,7 @@
   <script>
     const find = obj => path => {
       return path
-        .replace(/\[(\d+)\]/, ".$1")
+        .replace(/\[(\d+)\]/g, ".$1")
         .split(".")
         .filter(self => self)
         .reduce((o, subpath) => o[subpath], obj);
@@ -34,6 +34,7 @@
           .replace(/\.?(\b)\[?(\d+)\]?(\b|)/gm, "[$2]")
           .replace(/^\.?(.*?)(\.*)$/, ".$1")
           .replace(/^.$/, "");
+        console.log(e.target.value, this.path)
         try {
           this.obj = find(this.original)(this.path);
         } catch (e) {
