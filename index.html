@@ -79,8 +79,10 @@
       (async function main() {
         await riot.compile();
 
+        const obj = {a: 1.7, b: {c: [1, 2, {d: 3, z: true}, 4]}, e: "hi there!", f: false, g: null};
+
         riot.mount("tree-search", {
-          obj: {a: 1.7, b: {c: [1, 2, {d: 3, z: true}, 4]}, e: "hi there!", f: false, g: null},
+          obj,
           showDepth: 2,
           customizer: {
             key: (path, key, obj) => path === '.b.c' ? `<span style="background-color: #c5def3;">${key}!</span>` : undefined,
